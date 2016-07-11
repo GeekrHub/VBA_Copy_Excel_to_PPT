@@ -1,0 +1,23 @@
+Public Sub RangeToPresentation(ByVal sheetName As String, NamedRange As Excel.Range)
+    Dim ppApp As Object
+    Dim ppPres As Object
+    Dim PPSlide As Object
+
+    Set ppApp = GetObject(, "Powerpoint.Application")
+
+    Set ppPres = ppApp.ActivePresentation
+    ppApp.ActiveWindow.ViewType = ppViewNormal
+
+    ' Select the last (blank slide)
+    Dim longSlideCount As Integer
+    longSlideCount = ppPres.Slides.Count
+    ppPres.Slides(1).Select
+
+    Set PPSlide = ppPres.Slides(ppApp.ActiveWindow.Selection.SlideRange.SlideIndex)
+
+
+    NamedRange.Copy
+
+    ' Paste the range
+    PPSlide.Paste.Select
+End Sub
