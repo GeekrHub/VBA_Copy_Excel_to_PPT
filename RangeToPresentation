@@ -21,4 +21,3 @@ Public Sub RangeToPresentation(ByVal sheetName As String, NamedRange As Excel.Ra
     ' Paste the range
     PPSlide.Paste.Select
 End Sub
-print 'hello'
