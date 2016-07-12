@@ -1,4 +1,4 @@
-Public Sub RangeToPresentation(ByVal sheetName As String, NamedRange As Excel.Range)
+Public Sub RangeToPresentation()
     Dim ppApp As Object
     Dim ppPres As Object
     Dim PPSlide As Object
