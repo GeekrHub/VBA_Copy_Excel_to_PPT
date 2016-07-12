@@ -1,23 +1,77 @@
-Public Sub RangeToPresentation()
-    Dim ppApp As Object
-    Dim ppPres As Object
-    Dim PPSlide As Object
+Sub PasteMultipleSlides()
 
-    Set ppApp = GetObject(, "Powerpoint.Application")
+'PURPOSE: Copy Excel Ranges and Paste them into the Active PowerPoint presentation slides
+'SOURCE: www.TheSpreadsheetGuru.com
 
-    Set ppPres = ppApp.ActivePresentation
-    ppApp.ActiveWindow.ViewType = ppViewNormal
-
-    ' Select the last (blank slide)
-    Dim longSlideCount As Integer
-    longSlideCount = ppPres.Slides.Count
-    ppPres.Slides(1).Select
-
-    Set PPSlide = ppPres.Slides(ppApp.ActiveWindow.Selection.SlideRange.SlideIndex)
+Dim myPresentation As Object
+Dim mySlide As Object
+Dim PowerPointApp As Object
+Dim shp As Object
+Dim MySlideArray As Variant
+Dim MyRangeArray As Variant
+Dim x As Long
 
 
-    NamedRange.Copy
 
-    ' Paste the range
-    PPSlide.Paste.Select
+'Create an Instance of PowerPoint
+  On Error Resume Next
+    
+    'Is PowerPoint already opened?
+      Set PowerPointApp = GetObject(class:="PowerPoint.Application")
+    
+    'Clear the error between errors
+      Err.Clear
+
+  'If PowerPoint is not already open then open PowerPoint
+      If PowerPointApp Is Nothing Then Set PowerPointApp = CreateObject(class:="PowerPoint.Application")
+    
+    'Handle if the PowerPoint Application is not found
+      If Err.Number = 429 Then
+        MsgBox "PowerPoint could not be found, aborting."
+        Exit Sub
+      End If
+
+  On Error GoTo 0
+  
+  'Optimize Code
+  Application.ScreenUpdating = False
+  
+'Make PowerPoint Visible and Active
+  PowerPointApp.ActiveWindow.Panes(2).Activate
+    
+'Create a New Presentation
+  Set myPresentation = PowerPointApp.ActivePresentation
+
+'List of PPT Slides to Paste to
+  MySlideArray = Array(2, 3, 4, 5, 6, 7)
+
+'List of Excel Ranges to Copy from
+    MyRangeArray = Array(Worksheets("CAF1").Range("b2:l22"), Worksheets("CAF2").Range("b2:l22"), Worksheets("CAF3").Range("b2:l22"), Worksheets("CAFHZ").Range("b2:l22"), Worksheets("FTM").Range("b2:l22"), Worksheets("AAT").Range("b2:l22"))
+
+'Loop through Array data
+  For x = LBound(MySlideArray) To UBound(MySlideArray)
+    'Copy Excel Range
+        MyRangeArray(x).Copy
+    
+    'Paste to PowerPoint and position
+      On Error Resume Next
+        Set shp = myPresentation.Slides(MySlideArray(x)).Shapes.PasteSpecial(DataType:=2) 'Excel 2007-2010
+        Set shp = PowerPointApp.ActiveWindow.Selection.ShapeRange 'Excel 2013
+      On Error GoTo 0
+    
+        'Set size:
+      shp.Height = 530
+  
+    'Set position:
+      shp.Left = (960 - shp.Width) \ 2
+      shp.Top = (540 - shp.Height) \ 2
+        
+      
+  Next x
+
+'Transfer Complete
+  Application.CutCopyMode = False
+  ThisWorkbook.Activate
+  MsgBox "Complete!"
+
 End Sub
