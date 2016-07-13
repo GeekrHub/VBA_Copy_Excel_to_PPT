@@ -3,50 +3,46 @@ Sub PasteMultipleSlides()
 'PURPOSE: Copy Excel Ranges and Paste them into the Active PowerPoint presentation slides
 'SOURCE: www.TheSpreadsheetGuru.com
 
-Dim myPresentation As Object
-Dim mySlide As Object
-Dim PowerPointApp As Object
 Dim shp As Object
 Dim MySlideArray As Variant
 Dim MyRangeArray As Variant
 Dim x As Long
 
 
+Dim PowerPointApp As PowerPoint.Application
+Dim myPresentation As PowerPoint.Presentation
+Dim mySlide As PowerPoint.Slide
+Dim i As Integer
 
-'Create an Instance of PowerPoint
-  On Error Resume Next
-    
-    'Is PowerPoint already opened?
-      Set PowerPointApp = GetObject(class:="PowerPoint.Application")
-    
-    'Clear the error between errors
-      Err.Clear
+    ' Create instance of PowerPoint
+    Set PowerPointApp = CreateObject("Powerpoint.Application")
 
-  'If PowerPoint is not already open then open PowerPoint
-      If PowerPointApp Is Nothing Then Set PowerPointApp = CreateObject(class:="PowerPoint.Application")
-    
-    'Handle if the PowerPoint Application is not found
-      If Err.Number = 429 Then
-        MsgBox "PowerPoint could not be found, aborting."
-        Exit Sub
-      End If
+    ' For automation to work, PowerPoint must be visible
+    ' (alternatively, other extraordinary measures must be taken)
+    PowerPointApp.Visible = True
 
-  On Error GoTo 0
-  
-  'Optimize Code
-  Application.ScreenUpdating = False
+    ' Create a presentation
+    Set myPresentation = PowerPointApp.Presentations.Add
+
+    ' Some PowerPoint actions work best in normal slide view
+    PowerPointApp.ActiveWindow.ViewType = ppViewSlide
+
+    ' Add first slide to presentation
+    For i = 1 To 9
+    Set mySlide = myPresentation.Slides.Add(i, ppLayoutTitleOnly)
+    Next
   
 'Make PowerPoint Visible and Active
-  PowerPointApp.ActiveWindow.Panes(2).Activate
+  PowerPointApp.ActiveWindow.Panes(1).Activate
     
 'Create a New Presentation
   Set myPresentation = PowerPointApp.ActivePresentation
 
 'List of PPT Slides to Paste to
-  MySlideArray = Array(2, 3, 4, 5, 6, 7,8,9)
+  MySlideArray = Array(2, 3, 4, 5, 6, 7, 8, 9)
 
 'List of Excel Ranges to Copy from
-    MyRangeArray = Array(Worksheets("CAF1").Range("b2:l22"), Worksheets("CAF2").Range("b2:l25"), Worksheets("CAF3").Range("b2:l26"), Worksheets("CAFHZ").Range("b2:l29"), Worksheets("FTM").Range("b2:l26"), Worksheets("AAT").Range("b2:l20"),Worksheets("CVAP").Range("b2:l25"),Worksheets("SVAP").Range("b2:l29"))
+    MyRangeArray = Array(Worksheets("CAF1").Range("b2:l22"), Worksheets("CAF2").Range("b2:l25"), Worksheets("CAF3").Range("b2:l26"), Worksheets("CAFHZ").Range("b2:l29"), Worksheets("FTM").Range("b2:l26"), Worksheets("AAT").Range("b2:l20"), Worksheets("CVAP").Range("b2:l25"), Worksheets("SVAP").Range("b2:l29"))
 
 'Loop through Array data
   For x = LBound(MySlideArray) To UBound(MySlideArray)
@@ -68,7 +64,22 @@ Dim x As Long
         
       
   Next x
-
+  
+' Save and close presentation
+    With myPresentation
+        .SaveAs "C:\\Users\mliu37.FORDAP1\Desktop\MyPreso.ppt"
+        '.Close
+        'Set myPresentation = Nothing
+        'PowerPointApp.Quit
+    Set PowerPointApp = Nothing
+    
+    End With
+  
+' Quit PowerPoint
+    'PowerPointApp.Quit
+    'Set PowerPointApp = Nothing
+    
+    
 'Transfer Complete
   Application.CutCopyMode = False
   ThisWorkbook.Activate
