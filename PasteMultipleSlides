@@ -43,10 +43,10 @@ Dim x As Long
   Set myPresentation = PowerPointApp.ActivePresentation
 
 'List of PPT Slides to Paste to
-  MySlideArray = Array(2, 3, 4, 5, 6, 7)
+  MySlideArray = Array(2, 3, 4, 5, 6, 7,8,9)
 
 'List of Excel Ranges to Copy from
-    MyRangeArray = Array(Worksheets("CAF1").Range("b2:l22"), Worksheets("CAF2").Range("b2:l22"), Worksheets("CAF3").Range("b2:l22"), Worksheets("CAFHZ").Range("b2:l22"), Worksheets("FTM").Range("b2:l22"), Worksheets("AAT").Range("b2:l22"))
+    MyRangeArray = Array(Worksheets("CAF1").Range("b2:l22"), Worksheets("CAF2").Range("b2:l25"), Worksheets("CAF3").Range("b2:l26"), Worksheets("CAFHZ").Range("b2:l29"), Worksheets("FTM").Range("b2:l26"), Worksheets("AAT").Range("b2:l20"),Worksheets("CVAP").Range("b2:l25"),Worksheets("SVAP").Range("b2:l29"))
 
 'Loop through Array data
   For x = LBound(MySlideArray) To UBound(MySlideArray)
